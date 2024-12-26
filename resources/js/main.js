@@ -1,2 +1,2 @@
-import "../css/app.scss"
+import "../css/main.scss"
 require('bootstrap')
