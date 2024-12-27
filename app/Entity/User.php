@@ -9,12 +9,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
-
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[Entity, Table('users')]
+#[HasLifecycleCallbacks]
 class User
 {
     #[Id, Column(options: ['unsigned' => true]), GeneratedValue()]
@@ -30,7 +34,7 @@ class User
     private string $name;
 
     #[Column(name: 'created_at')]
-    private \DateTime $createddAt;
+    private \DateTime $createdAt;
 
     #[Column(name: 'updated_at')]
     private \DateTime $updatedAt;
@@ -51,6 +55,16 @@ class User
     public function getUserId(): int
     {
         return $this->id;
+    }
+
+    #[PrePersist, PreUpdate]
+    public function updateTimestamps(LifecycleEventArgs $arguments): void
+    {
+        if (!isset($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+
+        $this->updatedAt = new \DateTime();
     }
 
     public function getEmail(): string
@@ -87,14 +101,14 @@ class User
         return $this;
     }
 
-    public function getCreateddAt(): \DateTime
+    public function getCreatedAt(): \DateTime
     {
-        return $this->createddAt;
+        return $this->createdAt;
     }
 
-    public function setCreateddAt(\DateTime $createddAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->createddAt = $createddAt;
+        $this->createdAt = $createdAt;
         return $this;
     }
 

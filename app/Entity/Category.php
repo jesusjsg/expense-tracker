@@ -24,7 +24,7 @@ class Category
     private string $name;
 
     #[Column(name: 'created_at')]
-    private \DateTime $createddAt;
+    private \DateTime $createdAt;
 
     #[Column(name: 'updated_at')]
     private \DateTime $updatedAt;
@@ -56,14 +56,14 @@ class Category
         return $this;
     }
 
-    public function getCreateddAt(): \DateTime
+    public function getCreatedAt(): \DateTime
     {
-        return $this->createddAt;
+        return $this->createdAt;
     }
 
-    public function setCreateddAt(\DateTime $createddAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->createddAt = $createddAt;
+        $this->createdAt = $createdAt;
         return $this;
     }
 

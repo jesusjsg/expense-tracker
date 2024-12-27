@@ -21,7 +21,7 @@ class Receipt
     private string $fileName;
 
     #[Column(name: 'created_at')]
-    private \DateTime $createddAt;
+    private \DateTime $createdAt;
 
     #[ManyToOne(inversedBy: 'receipts')]
     private Transaction $transaction;
@@ -43,14 +43,14 @@ class Receipt
         return $this;
     }
 
-    public function getCreateddAt(): \DateTime
+    public function getCreatedAt(): \DateTime
     {
-        return $this->createddAt;
+        return $this->createdAt;
     }
 
-    public function setCreateddAt(\DateTime $createddAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->createddAt = $createddAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
