@@ -9,7 +9,7 @@ use Slim\App;
 return function (App $app) {
     $app->get('/', [HomeController::class, 'index']);
     $app->get('/login', [AuthController::class, 'loginView']);
-    $app->get('/register', [AuthController::class, 'registerView']);
+    $app->get('/signup', [AuthController::class, 'signupView']);
     $app->post('/login', [AuthController::class, 'login']);
-    $app->post('/register', [AuthController::class, 'register']);
+    $app->post('/signup', [AuthController::class, 'signup']);
 };

@@ -23,12 +23,12 @@ class AuthController
         return $this->twig->render($response, 'auth/login.twig');
     }
 
-    public function registerView(Request $request, Response $response): Response
+    public function signupView(Request $request, Response $response): Response
     {
-        return $this->twig->render($response, 'auth/register.twig');
+        return $this->twig->render($response, 'auth/signup.twig');
     }
 
-    public function register(Request $request, Response $response): Response
+    public function signup(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
 
