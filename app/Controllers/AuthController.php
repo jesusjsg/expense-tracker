@@ -43,13 +43,10 @@ class AuthController
             'email'
         )->message('That email is taken. Try another email.');
 
-        if ($validator->validate()) {
-            echo "All fields are good!";
-        } else {
+        
+        if (! $validator->validate()) {
             throw new ValidationException($validator->errors());
         }
-
-        exit;
 
         $user = new User();
 
