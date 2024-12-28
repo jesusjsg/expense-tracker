@@ -59,4 +59,32 @@ class AuthController
 
         return $response;
     }
+
+    public function logIn(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        $validator = new Validator($data);
+        $validator->rule('required', ['email', 'password']);
+        $validator->rule('email', 'email');
+
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(
+            ['email' =>$data['email']]
+        );
+
+        if (! $user || ! password_verify($data['password'], $user->getPassword())) {
+            throw new ValidationException(['password' => ['The email or password are invalid.']]);
+        }
+
+        session_regenerate_id();
+
+        $_SESSION['user'] = $user->getUserId();
+
+        return $response->withHeader('Location', '/')->withStatus(302);
+    }
+
+    public function logOut(Request $request, Response $response): Response
+    {
+        return $response;
+    }
 }
