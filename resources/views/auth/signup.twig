@@ -18,6 +18,7 @@
                                     Register
                                 </h2>
                                 <form method="post" action="/signup">
+                                    {{ csrf.fields | raw }}
                                     <div class="form-outline form-white mb-4">
                                         <input 
                                             type="text" 

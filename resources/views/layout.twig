@@ -1,36 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-100">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Expense tracker{% endblock %}</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap">
+    {# <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"> #}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('main') }}
+    {{ encore_entry_link_tags('main') }}
     {% endblock %}
 
     {% block javascripts %}
-        {{ encore_entry_script_tags('main') }}
+    {{ encore_entry_script_tags('main') }}
     {% endblock %}
 </head>
+
 <body>
     <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4">
+        <header class="d-flex flex-wrap justify-content-center align-items-center py-3 mb-4">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                 <img src="{{ asset('build/images/logo.png') }}" width="64" height="64" alt="Expennies Logo" />
-                <span class="fs-1 fw-bold">Expense app</span>
+                <span class="fs-1 fw-bold">Ex<span class="text-primary">pennies</span></span>
             </a>
+
             <ul class="nav nav-pills align-items-center">
-                <li class="nav-item"><a href="#" class="nav-link fw-bold fs-5 active" aria-current="page">Overview</a></li>
-                <li class="nav-item"><a href="#" class="nav-link fw-bold fs-5" aria-current="page">Transactions</a></li>
-                <li class="nav-item"><a href="#" class="nav-link fw-bold fs-5" aria-current="page">Categories</a></li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link fw-bold fs-5 active" aria-current="page">Overview</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link fw-bold fs-5" aria-current="page">Transactions</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link fw-bold fs-5" aria-current="page">Categories</a>
+                </li>
             </ul>
+
+            <div class="dropdown user-dropdown-menu">
+                <a href="#" class="h5 text-decoration-none" id="userDropDownMenu" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z" />
+                    </svg>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userDropDownMenu">
+                    <li>
+                        <form action="/logout" method="post">
+                            {{ csrf.fields | raw }}
+                            <button class="dropdown-item" href="#">Log Out</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </header>
     </div>
-        <div class="container">
-            {% block content %}{% endblock %}
-        </div>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </body>
+
 </html>
