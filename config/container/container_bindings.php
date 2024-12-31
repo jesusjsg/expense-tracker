@@ -7,11 +7,13 @@ use App\Config;
 use App\Contracts\AuthInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\UserProviderServiceInterface;
+use App\Contracts\ValidatorFactoryInterface;
 use App\DataObjects\SessionConfig;
 use App\Enum\AppEnvironment;
 use App\Enum\SameSite;
 use App\Services\UserProviderService;
 use App\Session;
+use App\Validators\ValidatorFactory;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -108,4 +110,5 @@ return [
             SameSite::from($config->get('session.sameSite', 'lax'))
         )
     ),
+    ValidatorFactoryInterface::class => fn(ContainerInterface $containerInterface) => $containerInterface->get(ValidatorFactory::class)
 ];
