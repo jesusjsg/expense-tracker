@@ -28,9 +28,10 @@ return [
         ],
     ],
     'session' => [
-        'name' => $sessionName . '_session',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'lax',
+        'name'       => $sessionName . '_session',
+        'flash_name' => $sessionName . '_flash',
+        'secure'     => true,
+        'httponly'   => true,
+        'samesite'   => 'lax',
     ]
 ];
