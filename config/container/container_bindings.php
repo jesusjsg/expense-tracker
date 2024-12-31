@@ -20,6 +20,7 @@ use Doctrine\ORM\ORMSetup;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
+use Slim\Csrf\Guard;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
@@ -110,5 +111,10 @@ return [
             SameSite::from($config->get('session.sameSite', 'lax'))
         )
     ),
-    ValidatorFactoryInterface::class => fn(ContainerInterface $containerInterface) => $containerInterface->get(ValidatorFactory::class)
+    ValidatorFactoryInterface::class => fn(ContainerInterface $containerInterface) => $containerInterface->get(ValidatorFactory::class),
+
+    //Slim csrf
+
+    'csrf' => fn(ResponseFactoryInterface $responseFactoryInterface) => new Guard($responseFactoryInterface, persistentTokenMode: true),
+
 ];
