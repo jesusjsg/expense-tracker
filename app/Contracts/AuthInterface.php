@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Contracts;
 
+use App\DataObjects\SignupUserData;
 
 interface AuthInterface
 {
@@ -14,4 +15,8 @@ interface AuthInterface
     public function checkCreadentials(UserInterface $userInterface, array $data): bool;
 
     public function logOut(): void;
+
+    public function signup(SignupUserData $data): UserInterface;
+
+    public function login(UserInterface $userInterface): void;
 }
