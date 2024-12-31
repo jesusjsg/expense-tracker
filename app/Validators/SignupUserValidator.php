@@ -19,7 +19,7 @@ class SignupUserValidator implements ValidatorInterface
 
     public function validate(array $data): array
     {
-        $validator = new Validator();
+        $validator = new Validator($data);
 
         $validator->rule('required', ['name', 'email', 'password', 'confirmPassword']);
         $validator->rule('email', 'email');
