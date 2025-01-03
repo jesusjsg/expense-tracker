@@ -47,6 +47,7 @@
                 </form>
             </div>
         </div>
+        {% include "categories/edit_category_modal.twig" %}
         {% if categories %}
             <div id="categoriesTable">
                 <table class="table table-striped">
@@ -74,7 +75,7 @@
                                             </button>
                                         </form>
                                         <button class="ms-2 btn btn-outline-primary edit-category-btn"
-                                                data-id="{{ category.id }}">
+                                                data-id="{{ category.categoryId }}">
                                             <i class="bi bi-pencil-fill"></i>
                                         </button>
                                     </div>
