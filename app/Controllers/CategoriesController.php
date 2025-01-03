@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controllers;
 
 use App\Contracts\ValidatorFactoryInterface;
+use App\ResponseFormatter;
 use App\Services\CategoryService;
 use App\Validators\CreateCategoryValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,7 +17,8 @@ class CategoriesController
     public function __construct(
         private readonly Twig $twig,
         private readonly ValidatorFactoryInterface $validatorFactory,
-        private readonly CategoryService $categoryService
+        private readonly CategoryService $categoryService,
+        private readonly ResponseFormatter $responseJsonFormatter
     ) {
     }
 
@@ -47,5 +49,18 @@ class CategoriesController
     {
         $this->categoryService->delete((int) $args['id']);
         return $response->withHeader('Location', '/categories')->withStatus(302);
+    }
+
+    public function get(Request $request, Response $response, array $args): Response
+    {
+        $category = $this->categoryService->getById((int) $args['id']);
+
+        if (! $category) {
+            return $response->withStatus(404);
+        }
+
+        $data = ['id' => $category->getCategoryId(), 'name' =>$category->getName()];
+    
+        return $this->responseJsonFormatter->json($response, $data);
     }
 }
