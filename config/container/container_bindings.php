@@ -8,6 +8,7 @@ use App\Contracts\AuthInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\UserProviderServiceInterface;
 use App\Contracts\ValidatorFactoryInterface;
+use App\Csrf;
 use App\DataObjects\SessionConfig;
 use App\Enum\AppEnvironment;
 use App\Enum\SameSite;
@@ -113,8 +114,10 @@ return [
     ),
     ValidatorFactoryInterface::class => fn(ContainerInterface $containerInterface) => $containerInterface->get(ValidatorFactory::class),
 
-    //Slim csrf
-
-    'csrf' => fn(ResponseFactoryInterface $responseFactoryInterface) => new Guard($responseFactoryInterface, persistentTokenMode: true),
+    //Slim Csrf
+    
+    'csrf' => fn(ResponseFactoryInterface $responseFactoryInterface, Csrf $csrf) => new Guard(
+      $responseFactoryInterface, failureHandler: $csrf->failureHandler(), persistentTokenMode: true
+    )
 
 ];
