@@ -8,8 +8,10 @@ use App\Contracts\ValidatorFactoryInterface;
 use App\ResponseFormatter;
 use App\Services\CategoryService;
 use App\Validators\CreateCategoryValidator;
+use App\Validators\UpdateCategoryValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Response as Psr7Response;
 use Slim\Views\Twig;
 
 class CategoriesController
@@ -62,5 +64,20 @@ class CategoriesController
         $data = ['id' => $category->getCategoryId(), 'name' =>$category->getName()];
     
         return $this->responseJsonFormatter->json($response, $data);
+    }
+
+    public function update(Request $request, Response $response, array $args): Response
+    {
+        $data = $this->validatorFactory->make(UpdateCategoryValidator::class)->validate($request->getParsedBody());
+
+        $category = $this->categoryService->getById((int) $args['id']);
+
+        if (! $category) {
+            return $response->withStatus(404);
+        }
+
+        $this->categoryService->update($category, $data['name']); // if the data contain more than two keys use dto instead array
+
+        return $response;
     }
 }
