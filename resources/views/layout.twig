@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta id="csrfName" name="{{ csrf.keys.name }}" content="{{ csrf.name }}">
+    <meta id="csrfValue" name="{{ csrf.keys.value }}" content="{{ csrf.value }}">
     <title>{% block title %}Expense tracker{% endblock %}</title>
     {# <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
