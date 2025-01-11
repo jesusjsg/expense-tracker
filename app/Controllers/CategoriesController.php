@@ -11,7 +11,6 @@ use App\Validators\CreateCategoryValidator;
 use App\Validators\UpdateCategoryValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Psr7\Response as Psr7Response;
 use Slim\Views\Twig;
 
 class CategoriesController
@@ -50,7 +49,7 @@ class CategoriesController
     public function delete(Request $request ,Response $response, array $args): Response
     {
         $this->categoryService->delete((int) $args['id']);
-        return $response->withHeader('Location', '/categories')->withStatus(302);
+        return $response;
     }
 
     public function get(Request $request, Response $response, array $args): Response
