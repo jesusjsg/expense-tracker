@@ -1,5 +1,6 @@
 import { Modal } from "bootstrap"
-import { get, post } from "./ajax"
+import { get, post, del, clearValidation } from "./ajax"
+
 
 window.addEventListener('DOMContentLoaded', function () {
     const editCategoryModal = new Modal(document.getElementById('editCategoryModal'))
@@ -20,20 +21,26 @@ window.addEventListener('DOMContentLoaded', function () {
 
         post(`/categories/${categoryId}`, {
             name: editCategoryModal._element.querySelector('input[name="name"]').value
-        }).then(response => {
+        }, editCategoryModal._element).then(response => {
             if (response.ok) {
                 editCategoryModal.hide()
-            } else if (response.status === 422) {
-                console.log('bad')
             }
-        }).catch(error => {
-            console.log(error)
         })
+    })
+
+    document.querySelector('.delete-category-btn').addEventListener('click', function (event) {
+        const categoryId = event.currentTarget.getAttribute('data-id')
+
+        if (confirm('Are you sure you want to delete this category?')) {
+            del(`/categories/${categoryId}`)
+        }
     })
 })
 
 function openEditCategoryModal(modal, { id, name }) {
     const nameInput = modal._element.querySelector('input[name="name"]')
+    
+    clearValidation(modal._element)
 
     nameInput.value = name
 
