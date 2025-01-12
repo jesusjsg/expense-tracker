@@ -48,40 +48,18 @@
             </div>
         </div>
         {% include "categories/edit_category_modal.twig" %}
-        {% if categories %}
-            <div id="categoriesTable">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Created at</th>
-                            <th>Updated at</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for category in categories %}
-                            <tr>
-                                <td>{{ category.name }}</td>
-                                <td>{{ category.createdAt | date('m/d/Y g:i A') }}</td>
-                                <td>{{ category.updatedAt | date('m/d/Y g:i A') }}</td>
-                                <td>
-                                    <div class="d-flex flex-">
-                                        <button class="ms-2 btn btn-outline-primary delete-category-btn"
-                                            data-id="{{ category.categoryId }}">
-                                            <i class="bi bi-trash3-fill"></i>
-                                        </button>
-                                        <button class="ms-2 btn btn-outline-primary edit-category-btn"
-                                            data-id="{{ category.categoryId }}">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+        <div>
+            <table id="categoriesTable">
+                <thead>
+                    <tr>
+                        <th>Name
+                        </th>                            <th>Created at</th>
+                        <th>Updated at</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
