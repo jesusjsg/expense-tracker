@@ -12,6 +12,8 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "core-js": "^3.39.0",
+    "datatables.net": "^2.2.1",
+    "datatables.net-dt": "^2.2.1",
     "file-loader": "^6.2.0",
     "sass": "^1.83.0",
     "sass-loader": "^16.0.4",
