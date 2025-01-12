@@ -41,7 +41,7 @@ const ajax = (url, method = 'get', data = {}, domElement = null) => {
 
 const get = (url, data) => ajax(url, 'get', data)
 const post = (url, data, domElement) => ajax(url, 'post', data, domElement)
-const del = (url, data) => ajax(url, 'delete')
+const del = (url, data) => ajax(url, 'delete', data)
 
 function handleErrors(errors, domElement) {
     for (const name_error in errors) {
