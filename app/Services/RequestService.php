@@ -5,7 +5,8 @@ declare(strict_types = 1);
 namespace App\Services;
 
 use App\Contracts\SessionInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use App\DataObjects\DataTableParams;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class RequestService
 {
@@ -13,7 +14,7 @@ class RequestService
     {
     }
 
-    public function getReferer(ServerRequestInterface $request): string
+    public function getReferer(Request $request): string
     {
         $referer = $request->getHeader('referer')[0] ?? '';
 
@@ -30,8 +31,26 @@ class RequestService
         return $referer;
     }
     
-    public function isXhr(ServerRequestInterface $request): bool
+    public function isXhr(Request $request): bool
     {
         return $request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
     }
-}
+    
+    public function getDatatableParams(Request $request): DataTableParams
+    {
+        $queryParams = $request->getQueryParams();
+
+        $orderBy = $queryParams['columns'][$queryParams['order'][0]['column']]['data'];
+        $orderDir = $queryParams['order'][0]['dir'];
+
+        return new DataTableParams(
+            (int) $queryParams['start'],
+            (int) $queryParams['length'],
+            $orderBy,
+            $orderDir,
+            $queryParams['search']['value'],
+            (int) $queryParams['draw'],
+        );
+    }
+}   
+
