@@ -7,7 +7,6 @@ window.addEventListener('DOMContentLoaded', function () {
     
     const table = new DataTable('#categoriesTable', {
         serverSide: true,
-        processing: true,
         ajax: '/categories/load',
         orderMulti: false,
         columns: [

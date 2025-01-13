@@ -25,7 +25,7 @@ class CategoryService
         return $this->update($category, $name);
     }
 
-    public function getPaginatedCategories(int $start, int $length): array
+    public function getPaginatedCategories(int $start, int $length): Paginator
     {
         $query = $this->entityManager
                     ->getRepository(Category::class)
@@ -33,7 +33,7 @@ class CategoryService
                     ->setFirstResult($start)
                     ->setMaxResults($length);
         
-        return $query->getQuery()->getResult();
+        return new Paginator($query);
     }
 
     public function delete(int $id): void
