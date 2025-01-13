@@ -8,6 +8,7 @@ use App\Contracts\ValidatorFactoryInterface;
 use App\Entity\Category;
 use App\ResponseFormatter;
 use App\Services\CategoryService;
+use App\Services\RequestService;
 use App\Validators\CreateCategoryValidator;
 use App\Validators\UpdateCategoryValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,7 +21,8 @@ class CategoriesController
         private readonly Twig $twig,
         private readonly ValidatorFactoryInterface $validatorFactory,
         private readonly CategoryService $categoryService,
-        private readonly ResponseFormatter $responseJsonFormatter
+        private readonly ResponseFormatter $responseJsonFormatter,
+        private readonly RequestService $requestService
     ) {
     }
 
@@ -79,29 +81,25 @@ class CategoriesController
     
     public function load(Request $request, Response $response): Response
     {
-        $queryParams = $request->getQueryParams();
+        $queryParams = $this->requestService->getDataTableParams($request);
+        $categories = $this->categoryService->getPaginatedCategories($queryParams);
 
-        $categories = $this->categoryService->getPaginatedCategories((int) $queryParams['start'], (int) $queryParams['length']);
-
-        $setData =  function (Category $category) {
+        $setData = function (Category $category) {
             return [
                 'id'        => $category->getCategoryId(),
                 'name'      => $category->getName(),
                 'createdAt' => $category->getCreatedAt()->format('m/d/Y g:i A'),
-                'updatedAt' => $category->getUpdatedAt()->format('m/d/Y g:i A')
+                'updatedAt' => $category->getCreatedAt()->format('m/d/Y g:i A')
             ];
         };
 
         $totalCategories = count($categories);
 
-        return $this->responseJsonFormatter->json(
+        return $this->responseJsonFormatter->datatable(
             $response,
-            [   
-                'data'              => array_map($setData, (array) $categories->getIterator()),
-                'draw'              => (int) $queryParams['draw'],
-                'recordsTotal'      => $totalCategories,
-                'recordsFiltered'   => $totalCategories,
-            ]
+            array_map($setData, (array) $categories->getIterator()),
+            $queryParams->draw,
+            $totalCategories
         );
     }
 }
