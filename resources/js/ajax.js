@@ -45,18 +45,16 @@ const del = (url, data) => ajax(url, 'delete', data)
 
 function handleErrors(errors, domElement) {
     for (const name_error in errors) {
-        const element = domElement.querySelector(`input[name="${name_error}"]`)
-        
+        const element = domElement.querySelector(`[name="${name_error}"]`)
+
         element.classList.add('is-invalid')
 
-        for (const error of errors[name_error]) {
-            const errorDiv = document.createElement('div')
+        const errorDiv = document.createElement('div')
 
-            errorDiv.classList.add('invalid-feedback')
-            errorDiv.textContent = error
+        errorDiv.classList.add('invalid-feedback')
+        errorDiv.textContent = errors[name_error][0]
 
-            element.parentNode.append(errorDiv)
-        }
+        element.parentNode.append(errorDiv)
     }
 }
 
