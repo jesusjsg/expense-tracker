@@ -16,7 +16,6 @@ class CategoryService
     {
     }
 
-
     public function create(string $name, User $user): Category
     {
         $category = new Category();
@@ -65,5 +64,16 @@ class CategoryService
         $this->entityManager->flush();
 
         return $category;
+    }
+
+    public function getCategoryNames(): array
+    {
+        return $this->entityManager
+            ->getRepository(Category::class)
+            ->createQueryBuilder('c')
+            ->select('c.id', 'c.name')
+            ->getQuery()
+            ->getArrayResult();
+
     }
 }
