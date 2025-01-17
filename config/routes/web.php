@@ -5,6 +5,8 @@ declare(strict_types = 1);
 use App\Controllers\AuthController;
 use App\Controllers\CategoriesController;
 use App\Controllers\HomeController;
+use App\Controllers\ReceiptController;
+use App\Controllers\TransactionImportController;
 use App\Controllers\TransactionsController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
@@ -39,6 +41,10 @@ return function (App $app) {
         $transactions->delete('/{id:[0-9]+}', [TransactionsController::class, 'delete']);
         $transactions->get('/{id:[0-9]+}', [TransactionsController::class, 'get']);
         $transactions->post('/{id:[0-9]+}', [TransactionsController::class, 'update']);
+        $transactions->post('/import', [TransactionImportController::class, 'import']);
+        $transactions->post('/{id:[0-9]+}/receipts', [ReceiptController::class, 'store']);
+        $transactions->get('/{transactionId:[0-9]+}/receipts/{id:[0-9]+}', [ReceiptController::class, 'download']);
+        $transactions->delete('/{transactionId:[0-9]+}/receipts/{id:[0-9]+}', [ReceiptController::class, 'delete']);
     })->add(AuthMiddleware::class);
 
 };
