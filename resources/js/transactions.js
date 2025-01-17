@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', function () {
     const newTransactionModal = new Modal(document.getElementById('newTransactionModal'))
     const updateTransactionModal = new Modal(document.getElementById('editTransactionModal'))
     const uploadReceiptModal = new Modal(document.getElementById('uploadReceiptModal'))
+    const importTransactionModal = new Modal(document.getElementById('importTransactionsModal'))
 
     const table = new DataTable('#transactionsTable', {
         serverSide: true,
@@ -118,7 +119,7 @@ window.addEventListener('DOMContentLoaded', function () {
             uploadReceiptModal.show()
         } else if (deleteReceiptBtn) {
             const receiptId = deleteReceiptBtn.getAttribute('data-id')
-            const transactionId = deleteReceiptBtn.getAttribute('data-transactionId')
+            const transactionId = deleteReceiptBtn.getAttribute('data-transactionid')
 
             if (confirm('Are you sure you want to delete this receipt?')) {
                 del(`/transactions/${transactionId}/receipts/${receiptId}`).then(response => {
@@ -156,6 +157,43 @@ window.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     table.draw()
                     uploadReceiptModal.hide()
+                }
+            })
+    })
+
+    document.querySelector('.import-transactions-btn').addEventListener('click', function (event) {
+        const formData = new FormData()
+        const button = event.currentTarget
+        const files = importTransactionModal._element.querySelector('input[type="file"]').files
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append('importFile', files[i])
+        }
+
+        button.setAttribute('disabled', true)
+
+        const btnHtml = button.innerHtml
+        
+        button.innerHtml = `
+            <div class="spinner-grow spinner-grow-sm text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow spinner-grow-sm text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow spinner-grow-sm text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        `
+
+        post(`/transactions/import`, formData, importTransactionModal._element)
+            .then(response => {
+                button.removeAttribute('disabled')
+                button.innerHtml = btnHtml
+
+                if (response.ok) {
+                    table.draw()
+                    importTransactionModal.hide()
                 }
             })
     })
