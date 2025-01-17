@@ -18,10 +18,13 @@ class Receipt
     private int $id;
 
     #[Column]
-    private string $fileName;
+    private string $filename;
 
     #[Column(name: 'storage_filename')]
     private string $storageFilename;
+
+    #[Column(name: 'media_type')]
+    private string $mediaType;
 
     #[Column(name: 'created_at')]
     private \DateTime $createdAt;
@@ -36,12 +39,12 @@ class Receipt
 
     public function getFilename(): string
     {
-        return $this->fileName;
+        return $this->filename;
     }
 
     public function setFilename(string $fileName): self
     {
-        $this->fileName = $fileName;
+        $this->filename = $fileName;
 
         return $this;
     }
@@ -79,6 +82,17 @@ class Receipt
     public function setStorageFilename(string $storageFilename): self
     {
         $this->storageFilename = $storageFilename;
+        return $this;
+    }
+
+    public function getMediaType(): string
+    {
+        return $this->mediaType;
+    }
+
+    public function setMediaType(string $mediaType): self
+    {
+        $this->mediaType = $mediaType;
         return $this;
     }
 }
