@@ -1,5 +1,10 @@
 {% extends "layout.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('transactions') }}
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('transactions') }}
@@ -19,6 +24,7 @@
         </div>
         {% include 'transactions/transactions_modal.twig' with {modal: {title: 'New transaction', id: 'newTransactionModal', isEdit: false}} %}
         {% include "transactions/transactions_modal.twig" with {modal: {title: 'Edit transaction', id: 'editTransactionModal', isEdit: true}} %}
+        {% include "transactions/upload_receipt_modal.twig" %}
         <div>
             <table id="transactionsTable">
                 <thead>
