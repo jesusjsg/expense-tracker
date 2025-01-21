@@ -45,6 +45,7 @@ return function (App $app) {
         $transactions->post('/{id:[0-9]+}/receipts', [ReceiptController::class, 'store']);
         $transactions->get('/{transactionId:[0-9]+}/receipts/{id:[0-9]+}', [ReceiptController::class, 'download']);
         $transactions->delete('/{transactionId:[0-9]+}/receipts/{id:[0-9]+}', [ReceiptController::class, 'delete']);
+        $transactions->post('/{id:[0-9]+}/review', [TransactionsController::class, 'toggleReviewed']);
     })->add(AuthMiddleware::class);
 
 };
