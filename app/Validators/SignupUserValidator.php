@@ -7,12 +7,12 @@ namespace App\Validators;
 use App\Contracts\ValidatorInterface;
 use App\Entity\User;
 use App\Exception\ValidationException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Valitron\Validator;
 
 class SignupUserValidator implements ValidatorInterface
 {
-    public function __construct(private readonly EntityManager $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         
     }
