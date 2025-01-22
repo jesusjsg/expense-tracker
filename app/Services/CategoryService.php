@@ -7,15 +7,10 @@ namespace App\Services;
 use App\DataObjects\DataTableParams;
 use App\Entity\Category;
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class CategoryService
+class CategoryService extends EntityManagerService
 {
-    public function __construct(private readonly EntityManager $entityManager)
-    {
-    }
-
     public function create(string $name, User $user): Category
     {
         $category = new Category();
@@ -49,7 +44,6 @@ class CategoryService
     {
         $categoryId = $this->entityManager->find(Category::class, $id);
         $this->entityManager->remove($categoryId);
-        $this->entityManager->flush();
     }
 
     public function getById(int $id): ?Category
@@ -61,7 +55,6 @@ class CategoryService
     {
         $category->setName($name);
         $this->entityManager->persist($category);
-        $this->entityManager->flush();
 
         return $category;
     }
@@ -80,5 +73,16 @@ class CategoryService
     public function findByName(string $name): ?Category
     {
         return $this->entityManager->getRepository(Category::class)->findBy(['name' => $name])[0] ?? null;
+    }
+
+    public function getAllKeyByName(): array
+    {
+        $categories = $this->entityManager->getRepository(Category::class)->findAll();
+        $categoryMap = [];
+
+        foreach ($categories as $category) {
+            $categoryMap[strtolower($category->getName())] = $category;
+        }
+        return $categoryMap;
     }
 }
