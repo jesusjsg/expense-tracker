@@ -55,6 +55,7 @@ class TransactionsController
 
             $request->getAttribute('user')
         );
+        $this->transactionService->flush();
 
         return $response;
     }
@@ -81,7 +82,7 @@ class TransactionsController
     public function update(Request $request, Response $response, array $args): Response
     {
         $data = $this->validatorFactory->make(TransactionValidator::class)->validate(
-            $request->getParsedBody()
+            $args + $request->getParsedBody()
         );
 
         $id = (int) $args['id'];
@@ -99,6 +100,7 @@ class TransactionsController
                 $data['category']
             )
         );
+        $this->transactionService->flush();
 
         return $response;
     } 
@@ -106,6 +108,7 @@ class TransactionsController
     public function delete(Request $request, Response $response, array $args): Response
     {
         $this->transactionService->delete((int) $args['id']);
+        $this->transactionService->flush();
         return $response;
     }
     
@@ -119,6 +122,7 @@ class TransactionsController
                 'description' => $transaction->getDescription(),
                 'amount'      => $transaction->getAmount(),
                 'date'        => $transaction->getDate()->format('m/d/Y g:i A'),
+                'wasReviewed' => $transaction->wasReviewed(),
                 'category'    => $transaction->getCategory()?->getName(),
                 'receipts'    => $transaction->getReceipts()->map(fn(Receipt $receipt) => [
                     'name'    => $receipt->getFilename(),
@@ -137,4 +141,17 @@ class TransactionsController
         );
     }
 
+    public function toggleReviewed(Request $request, Response $response, array $args): Response
+    {
+        $id = (int) $args['id'];
+        
+        if (! $id || ! ($transaction = $this->transactionService->getById($id))) {
+            return $response->withStatus(404);
+        }
+
+        $this->transactionService->toggleReviewed($transaction);
+        $this->transactionService->flush();
+
+        return $response;
+    }
 }
