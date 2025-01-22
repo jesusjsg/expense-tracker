@@ -13,17 +13,28 @@ window.addEventListener('DOMContentLoaded', function () {
         serverSide: true,
         ajax: '/transactions/load',
         orderMulti: false,
+        rowCallback: (row, data) => {
+            if (! data.wasReviewed) {
+                row.classList.add('fw-bold')
+            }
+            return row
+        },
         columns: [
             {data: 'description'},
             {
-                data: row => new Intl.NumberFormat(
-                    'en-US',
-                    {
-                        style: 'currency',
-                        currency: 'USD',
-                        currencySign: 'accounting'
-                    }
-                ).format(row.amount)
+                data: 'amount',
+                render: data => {
+                    const amount = new Intl.NumberFormat(
+                        'en-US',
+                        {
+                            style: 'currency',
+                            currency: 'USD',
+                            currencySign: 'accounting'
+                        }
+                    ).format(data)
+                    
+                    return `<span class="${data > 0 ? 'text-success' : ''}">${amount}</span>`
+                }
             },
             {data: 'category'},
             {
@@ -63,16 +74,32 @@ window.addEventListener('DOMContentLoaded', function () {
             {data: 'date'},
             {
                 data: row => `
-                    <div class="d-flex flex">
-                        <button type="submit" class="btn btn-outline-primary delete-transaction-btn" data-id="${row.id}">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>
-                        <button type="submit" class="ms-2 btn btn-outline-primary edit-transaction-btn" data-id="${row.id}">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
-                        <button type="submit" class="ms-2 btn btn-outline-primary open-receipt-upload-btn" data-id="${row.id}">
-                            <i class="bi bi-upload"></i>
-                        </button>
+                    <div class="d-flex gap-2">
+                        <div>
+                            <i class="bi ${ row.wasReviewed ? 'bi-check-circle-fill text-success' : 'bi-check-circle' } toggle-reviewed-btn fs-4
+                                role="button" data-id="${ row.id }"></i>
+                        </div>
+                        <div class="dropdown">
+                            <i class="bi bi-gear fs-4" role="button" data-bs-toggle="dropdown"></i>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item open-receipt-upload-btn" href="#" data-id="${ row.id }">
+                                        <i class="bi bi-upload"></i> Upload Receipt
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item edit-transaction-btn" href="#" data-id="${ row.id }">
+                                        <i class="bi bi-pencil-fill"></i> Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item delete-transaction-btn" href="#" data-id="${ row.id }">
+                                        <i class="bi bi-trash3-fill"></i> Delete
+                                    </a>
+                                </li>
+                            </ul>   
+                        </div>
                     </div>
                 `
             }
@@ -84,7 +111,6 @@ window.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (response.ok) {
                     table.draw()
-
                     newTransactionModal.hide()
                 }
             })
@@ -95,6 +121,7 @@ window.addEventListener('DOMContentLoaded', function () {
         const deleteBtn = event.target.closest('.delete-transaction-btn')
         const uploadBtn = event.target.closest('.open-receipt-upload-btn')
         const deleteReceiptBtn = event.target.closest('.delete-receipt')
+        const toggleReviewedBtn = event.target.closest('.toggle-reviewed-btn')
 
         if (editBtn) {
             const transactionId = editBtn.getAttribute('data-id')
@@ -102,6 +129,7 @@ window.addEventListener('DOMContentLoaded', function () {
             get(`/transactions/${transactionId}`)
                 .then(response => response.json())
                 .then(response => openEditCategoryModal(updateTransactionModal, response))
+
         } else if (deleteBtn) {
             const transactionId = deleteBtn.getAttribute('data-id')
 
@@ -117,6 +145,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
             uploadReceiptModal._element.querySelector('.upload-receipt-btn').setAttribute('data-id', transactionId)
             uploadReceiptModal.show()
+
         } else if (deleteReceiptBtn) {
             const receiptId = deleteReceiptBtn.getAttribute('data-id')
             const transactionId = deleteReceiptBtn.getAttribute('data-transactionid')
@@ -128,6 +157,14 @@ window.addEventListener('DOMContentLoaded', function () {
                     }
                 })
             }
+        } else if (toggleReviewedBtn) {
+            const transactionId = toggleReviewedBtn.getAttribute('data-id')
+
+            post(`/transactions/${ transactionId }/review`).then(response => {
+                if (response.ok) {
+                    table.draw()
+                }
+            })
         }
     })
 
@@ -215,8 +252,7 @@ function getTransactionForm(modal) {
 
 function openEditCategoryModal(modal, {id, ...data}) {
     for (let name in data) {
-        const nameInput = modal._element.querySe
-        lector(`[name="${name}"]`)
+        const nameInput = modal._element.querySelector(`[name="${name}"]`)
         clearValidation(modal._element)
         nameInput.value = data[name]
     }
