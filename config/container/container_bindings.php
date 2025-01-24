@@ -5,6 +5,7 @@ declare(strict_types = 1);
 use App\Auth;
 use App\Config;
 use App\Contracts\AuthInterface;
+use App\Contracts\EntityManagerServiceInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\UserProviderServiceInterface;
 use App\Contracts\ValidatorFactoryInterface;
@@ -13,6 +14,7 @@ use App\DataObjects\SessionConfig;
 use App\Enum\AppEnvironment;
 use App\Enum\SameSite;
 use App\Enum\StorageDriver;
+use App\Services\EntityManagerService;
 use App\Services\UserProviderService;
 use App\Session;
 use App\Validators\ValidatorFactory;
@@ -41,7 +43,6 @@ use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollection;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface;
 use Symfony\WebpackEncoreBundle\Asset\TagRenderer;
 use Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension;
-use Twig\Extension\DebugExtension;
 use Twig\Extra\Intl\IntlExtension;
 
 use function DI\create;
@@ -82,7 +83,6 @@ return [
         $twig->addExtension(new IntlExtension());
         $twig->addExtension(new EntryFilesTwigExtension($container));
         $twig->addExtension(new AssetExtension($container->get('webpack_encore.packages')));
-        $twig->addExtension(new DebugExtension());
         
         return $twig;
     },
@@ -106,8 +106,11 @@ return [
     ),
 
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+
     AuthInterface::class => fn(ContainerInterface $containerInterface) => $containerInterface->get(Auth::class),
+    
     UserProviderServiceInterface::class => fn(ContainerInterface $containerInterface) => $containerInterface->get(UserProviderService::class),
+    
     SessionInterface::class => fn(Config $config) => new Session(
         new SessionConfig(
             $config->get('session.name', ''),
@@ -140,5 +143,8 @@ return [
         $clockwork->addDataSource(new DoctrineDataSource($entityManager));
 
         return $clockwork;
-    }
+    },
+
+    EntityManagerServiceInterface::class => fn(EntityManagerInterface $entityManager) => new EntityManagerService($entityManager),
+
 ];
