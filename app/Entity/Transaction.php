@@ -50,6 +50,7 @@ class Transaction
     public function __construct()
     {
         $this->receipts = new ArrayCollection();
+        $this->wasReviewed = false;
     }
 
     public function getTransactionId(): int
@@ -124,13 +125,13 @@ class Transaction
         $this->receipts->add($receipt);
         return $this;
     }
-
+    
     public function wasReviewed(): bool
     {
         return $this->wasReviewed;
     }
 
-    public function setReviewed(bool $wasReviewed): self
+    public function setWasReviewed(bool $wasReviewed): self
     {
         $this->wasReviewed = $wasReviewed;
         return $this;
