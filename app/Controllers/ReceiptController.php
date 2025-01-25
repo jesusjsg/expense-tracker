@@ -6,6 +6,8 @@ namespace App\Controllers;
 
 use App\Contracts\EntityManagerServiceInterface;
 use App\Contracts\ValidatorFactoryInterface;
+use App\Entity\Receipt;
+use App\Entity\Transaction;
 use App\Services\ReceiptService;
 use App\Services\TransactionService;
 use App\Validators\UploadReceiptValidator;
@@ -26,7 +28,7 @@ class ReceiptController
     ) {
     }
 
-    public function store(Request $request, Response $response, array $args): Response
+    public function store(Request $request, Response $response, Transaction $transaction): Response
     {
         /**@var UploadedFileInterface $file */
         $file = $this->validatorFactoryInterface->make(UploadReceiptValidator::class)->validate(
@@ -34,12 +36,6 @@ class ReceiptController
         )['receipt'];
 
         $fileName = $file->getClientFilename();
-
-        $id = (int) $args['id'];
-
-        if (! $id || ! $transaction = $this->transactionService->getById($id)) {
-            return $response->withStatus(404);
-        }
 
         $randomFileName = bin2hex(random_bytes(25));
 
@@ -52,20 +48,9 @@ class ReceiptController
         return $response;
     }
 
-    public function download(Request $request, Response $response, array $args): Response
+    public function download(Response $response, Transaction $transaction, Receipt $receipt): Response
     {
-        $transactionId = (int) $args['transactionId'];
-        $receiptId = (int) $args['id'];
-        
-        if (! $transactionId || ! $this->transactionService->getById($transactionId)) {
-            return $response->withStatus(404);
-        }
-
-        if (! $receiptId || ! ($receipt = $this->receiptService->getById($receiptId))) {
-            return $response->withStatus(404);
-        }
-
-        if ($receipt->getTransaction()->getTransactionId() !== $transactionId) {
+        if ($receipt->getTransaction()->getTransactionId() !== $transaction->getTransactionId()) {
             return $response->withStatus(401);
         }
         
@@ -79,20 +64,9 @@ class ReceiptController
         return $response->withBody(new Stream($file));
     }
 
-    public function delete(Request $request, Response $response, array $args): Response
+    public function delete(Response $response, Transaction $transaction, Receipt $receipt): Response
     {
-        $transactionId = (int) $args['transactionId'];
-        $receiptId = (int) $args['id'];
-
-        if (! $transactionId || ! $this->transactionService->getById($transactionId)) {
-            return $response->withStatus(404);
-        }
-
-        if (! $receiptId || ! ($receipt = $this->receiptService->getById($receiptId))) {
-            return $response->withStatus(404);
-        }
-
-        if ($receipt->getTransaction()->getTransactionId() !== $transactionId) {
+        if ($receipt->getTransaction()->getTransactionId() !== $transaction->getTransactionId()) {
             return $response->withStatus(401);
         }
 
