@@ -44,6 +44,8 @@ const ajax = (url, method = 'get', data = {}, domElement = null) => {
                 response.json().then(errors => {
                     handleErrors(errors, domElement)
                 })
+            } else if (response.status === 404) {
+                alert(response.statusText)
             }
         }
         return response
