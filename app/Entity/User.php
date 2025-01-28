@@ -38,6 +38,9 @@ class User implements UserInterface
     #[Column]
     private string $name;
 
+    #[Column(name: 'verified_at', nullable: true)]
+    private ?\DateTime $verifiedAt;
+
     #[OneToMany(mappedBy: 'user', targetEntity: Category::class)]
     private Collection $categories;
 
@@ -146,5 +149,10 @@ class User implements UserInterface
     public function canManage(OwnableInterface $entity): bool
     {
         return $this->getUserId() === $entity->getUser()->getUserId();
+    }
+
+    public function getVerifiedAt(): ?\DateTime
+    {
+        return $this->verifiedAt;
     }
 }
