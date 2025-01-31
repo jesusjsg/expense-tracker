@@ -75,7 +75,7 @@ class Auth implements AuthInterface
         $user = $this->userProvider->newUser($data);
         $this->login($user);
 
-        $this->signupEmail->send($user->getEmail());
+        $this->signupEmail->send($user);
         
         return $user;
     }
