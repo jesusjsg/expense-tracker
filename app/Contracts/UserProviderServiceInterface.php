@@ -13,4 +13,6 @@ interface UserProviderServiceInterface
     public function getByCredentials(array $data): ?UserInterface;
 
     public function newUser(SignupUserData $data): UserInterface;
+
+    public function verifyUser(UserInterface $user): void;
 }
