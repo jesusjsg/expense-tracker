@@ -9,7 +9,9 @@ $appEnviromment = $_ENV['APP_ENV'] ?? AppEnvironment::Production->value;
 $sessionName    = strtolower(str_replace(' ', '_', $_ENV['APP_NAME']));
 
 return [
+    'app_key'               => $_ENV['APP_KEY'] ?? '',
     'app_name'              => $_ENV['APP_NAME'],
+    'app_url'               => $_ENV['APP_URL'],
     'app_version'           => $_ENV['APP_VERSION'] ?? '1.0',
     'app_environment'       => $appEnviromment,
     'display_error_details' => (bool) ($_ENV['APP_DEBUG'] ?? 0),
