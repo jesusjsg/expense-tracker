@@ -58,16 +58,6 @@ class User implements UserInterface
         return $this->id;
     }
 
-    #[PrePersist, PreUpdate]
-    public function updateTimestamps(LifecycleEventArgs $arguments): void
-    {
-        if (!isset($this->createdAt)) {
-            $this->createdAt = new \DateTime();
-        }
-
-        $this->updatedAt = new \DateTime();
-    }
-
     public function getEmail(): string
     {
         return $this->email;
@@ -99,28 +89,6 @@ class User implements UserInterface
     public function setName(string $name): self
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTime $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
         return $this;
     }
 
@@ -160,5 +128,10 @@ class User implements UserInterface
     {
         $this->verifiedAt = $verifiedAt;
         return $this;
+    }
+
+    public function hasTwoFactorAuthEnabled(): bool
+    {
+        return true;
     }
 }
