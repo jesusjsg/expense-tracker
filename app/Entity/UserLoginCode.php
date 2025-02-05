@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Schema\Column;
+use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\Table;
 #[Entity, Table('user_login_codes')]
 class UserLoginCode
 {
-    #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
+    #[Id, Column(options: ['unsigned' => true]), GeneratedValue()]
     private int $id;
 
     #[Column(length: 6)]
