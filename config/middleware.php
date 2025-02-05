@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 use App\Config;
 use App\Enum\AppEnvironment;
-use App\Middleware\AuthenticateMiddleware;
 use App\Middleware\CsrfFieldsMiddleware;
 use App\Middleware\OldFormDataMiddleware;
 use App\Middleware\StartSessionsMiddleware;
@@ -24,7 +23,6 @@ return function (App $app) {
     $app->add(MethodOverrideMiddleware::class);
     $app->add(CsrfFieldsMiddleware::class);
     $app->add('csrf');
-    $app->add(AuthenticateMiddleware::class);    
     $app->add(TwigMiddleware::create($app, $container->get(Twig::class)));
     $app->add(ValidationExceptionMiddleware::class);
     $app->add(ValidationErrorsMiddleware::class); 
