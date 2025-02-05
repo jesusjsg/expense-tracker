@@ -48,12 +48,14 @@ return function (App $app) {
         $group->post('/logout', [AuthController::class, 'logOut']);
         $group->get('/verify', [VerifyController::class, 'index']);
         $group->get('/verify/{id}/{hash}', [VerifyController::class, 'verify'])->setName('verify')->add(ValidateSignatureMiddleware::class);
-    });
+        $group->post('/verify', [VerifyController::class, 'resend']);
+    })->add(AuthMiddleware::class);
 
     $app->group('', function(RouteCollectorProxy $guest) {
         $guest->get('/login', [AuthController::class, 'loginView']);
         $guest->get('/signup', [AuthController::class, 'signupView']);
-        $guest->post('/login', [AuthController::class, 'login']);
+        $guest->post('/login', [AuthController::class, 'logIn']);
         $guest->post('/signup', [AuthController::class, 'signup']);
+        $guest->post('/login/two-factor', [AuthController::class, 'twoFactorLogin']);
     })->add(GuestMiddleware::class);
 };
