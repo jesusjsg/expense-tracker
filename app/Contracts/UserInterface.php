@@ -10,4 +10,6 @@ interface UserInterface
     public function getUserId(): int;
     public function getPassword(): string;
     public function getName(): string;
+    public function setVerifiedAt(\Datetime $verifiedAt): static;
+    public function hasTwoFactorAuthEnabled(): bool;
 }
