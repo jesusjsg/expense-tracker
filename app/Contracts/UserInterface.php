@@ -12,4 +12,5 @@ interface UserInterface
     public function getName(): string;
     public function setVerifiedAt(\Datetime $verifiedAt): static;
     public function hasTwoFactorAuthEnabled(): bool;
+    public function getEmail(): string;
 }
