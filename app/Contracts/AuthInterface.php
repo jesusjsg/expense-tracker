@@ -20,4 +20,6 @@ interface AuthInterface
     public function signup(SignupUserData $data): UserInterface;
 
     public function login(UserInterface $userInterface): void;
+
+    public function attemptTwoFactorLogin(array $data): bool;
 }
