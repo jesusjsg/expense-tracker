@@ -32,7 +32,6 @@ return function (App $app) {
         $app->add(new ClockworkMiddleware($app, $container->get(Clockwork::class)));
     }
     $app->addBodyParsingMiddleware();
-
     $app->addErrorMiddleware(
         (bool) $config->get('display_error_details'),
         (bool) $config->get('log_errors'),

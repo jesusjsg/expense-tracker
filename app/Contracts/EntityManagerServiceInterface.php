@@ -7,9 +7,8 @@ namespace App\Contracts;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- @mixin EntityManagerInterface
+ * @mixin EntityManagerInterface
 */
-
 interface EntityManagerServiceInterface
 {
     public function __call(string $name, array $arguments);
