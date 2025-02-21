@@ -1,5 +1,15 @@
 {% extends "auth/layout.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('auth') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('auth') }}
+{% endblock %}
+
 {% block title %}
     Login
 {% endblock %}
@@ -37,7 +47,7 @@
                                         />
                                     </div>
                                     <p class="mb-4 text-end">
-                                        <a class="text-secondary fw-semibold" href="#">Forgot password?</a>
+                                        <a class="text-secondary fw-semibold" href="/forgot-password">Forgot password?</a>
                                     </p>
                                     <button class="btn btn-primary bg-gradient text-white btn-lg px-5 log-in-btn" type="button">
                                         Login
