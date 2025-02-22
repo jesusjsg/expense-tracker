@@ -6,9 +6,6 @@
     <meta id="csrfName" name="{{ csrf.keys.name }}" content="{{ csrf.name }}">
     <meta id="csrfValue" name="{{ csrf.keys.value }}" content="{{ csrf.value }}">
     <title>{% block title %}Expense tracker{% endblock %}</title>
-    {# <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"> #}
     {% block stylesheets %}
     {{ encore_entry_link_tags('main') }}
     {% endblock %}
@@ -46,6 +43,9 @@
                     </span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="userDropDownMenu">
+                    <li>
+                        <a href="/profile" class="dropdown-item">Profile</a>
+                    </li>
                     <li>
                         <form action="/logout" method="post">
                             {{ csrf.fields | raw }}
