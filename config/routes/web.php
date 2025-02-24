@@ -5,6 +5,8 @@ declare(strict_types = 1);
 use App\Controllers\AuthController;
 use App\Controllers\CategoriesController;
 use App\Controllers\HomeController;
+use App\Controllers\PasswordResetController;
+use App\Controllers\ProfileController;
 use App\Controllers\ReceiptController;
 use App\Controllers\TransactionImportController;
 use App\Controllers\TransactionsController;
@@ -43,6 +45,11 @@ return function (App $app) {
             $transactions->post('/{transaction}/review', [TransactionsController::class, 'toggleReviewed']);
         });
     })->add(VerifyEmailMiddleware::class)->add(AuthMiddleware::class);
+
+    $app->group('/profile', function(RouteCollectorProxy $profile) {
+        $profile->get('', [ProfileController::class, 'index']);
+        $profile->post('', [ProfileController::class, 'update']);
+    })->add(VerifyEmailMiddleware::class)->add(AuthMiddleware::class);
     
     $app->group('', function(RouteCollectorProxy $group) {
         $group->post('/logout', [AuthController::class, 'logOut']);
@@ -57,5 +64,10 @@ return function (App $app) {
         $guest->post('/login', [AuthController::class, 'logIn']);
         $guest->post('/signup', [AuthController::class, 'signup']);
         $guest->post('/login/two-factor', [AuthController::class, 'twoFactorLogin']);
+        $guest->get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm']);
+        $guest->get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])
+            ->setName('password-reset')
+            ->add(ValidateSignatureMiddleware::class);
+        $guest->post('/forgot-password', [PasswordResetController::class, 'handleForgotPasswordRequest']);
     })->add(GuestMiddleware::class);
 };
